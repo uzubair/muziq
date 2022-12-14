@@ -9,6 +9,20 @@ from typing import Tuple
 log = logging.getLogger("i.utils")
 
 
+def environ_or_required(key):
+    """Make an option required if required ENV variable is not found"""
+    return (
+        {"default": os.environ.get(key)} if os.environ.get(key) else {"required": True}
+    )
+
+
+def environ_or_optional(key):
+    """Make an option optional if required ENV variable is not found"""
+    return (
+        {"default": os.environ.get(key)} if os.environ.get(key) else {"required": False}
+    )
+
+
 def execution_time(duration: int) -> Tuple[int, int, int]:
     mins, secs = divmod(duration, 60)
     hours, mins = divmod(mins, 60)

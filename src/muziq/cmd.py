@@ -5,14 +5,14 @@ import os
 import timeit
 from argparse import ArgumentParser
 from muziq.parser import XMLParser
-from muziq.utils import execution_time
+from muziq.utils import execution_time, environ_or_required, environ_or_optional
 from muziq.fmanager import FileManager
 
 log = logging.getLogger("i.cmd")
 
 
 def run(args):
-    """ Perform the actual operation """
+    """Perform the actual operation"""
     xml_parser = XMLParser(
         args.xml_file, args.exclude_playlists, args.filter, args.debug
     )
@@ -26,7 +26,7 @@ def run(args):
 
 
 def main():
-    """ Entrypoint """
+    """Entrypoint"""
     start_time = timeit.default_timer()
 
     if "DEBUG" in os.environ:
@@ -40,29 +40,42 @@ def main():
     parser.add_argument(
         "-x",
         "--xml-file",
-        required=True,
         help="Apple Music's exported file to be processed",
+        **environ_or_required("XML_FILE"),
     )
     parser.add_argument(
         "-t",
         "--target-directory",
-        required=True,
         help="The root directory where playlist folders will be generated",
+        **environ_or_required("TARGET_DIRECTORY"),
     )
     parser.add_argument(
-        "-f", "--filter", default=[], help="Specify a particular playlist to export"
+        "-f",
+        "--filter",
+        default=[],
+        help="Specify a particular playlist to export",
+        **environ_or_optional("FILTER"),
     )
     parser.add_argument(
         "-e",
         "--exclude-playlists",
         default=["Library", "Downloaded", "Music"],
         help="Specify playlist names to be excluded",
+        **environ_or_optional("EXCLUDE_PLAYLISTS"),
     )
     parser.add_argument(
-        "--debug", action="store_true", default=False, help="For verbose logging"
+        "--debug",
+        action="store_true",
+        default=False,
+        help="For verbose logging",
+        **environ_or_optional("DEBUG"),
     )
     parser.add_argument(
-        "--damnit", action="store_true", default=False, help="Perform the operation"
+        "--damnit",
+        action="store_true",
+        default=False,
+        help="Perform the operation",
+        **environ_or_optional("DAMNIT"),
     )
 
     args = parser.parse_args()

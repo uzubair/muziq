@@ -17,7 +17,7 @@ def dependencies(requirements_file):
 
 setup(
     name="muziq",
-    version=VERSION,
+    version=VERSION,  # type: ignore
     description="A simple music utility to construct folder/ file style playlists for my 4Runner.",
     author="Usman Zubair",
     author_email="uzubair@gmail.com",
